@@ -1,4 +1,18 @@
 import sys
+import re
+
+def scan_tokens(source):
+    if not source.strip():
+        return [Token("EOF", "null")]
+
+class Token:
+    def __init__(self, token_type, lexeme, literal=None):
+        self.token_type = token_type
+        self.lexeme = lexeme
+        self.literal = literal
+
+    def __str__(self):
+        return f"{self.token_type} {self.literal}"
 
 
 def main():
@@ -19,11 +33,15 @@ def main():
     with open(filename) as file:
         file_contents = file.read()
 
-    # Uncomment this block to pass the first stage
     if file_contents:
         raise NotImplementedError("Scanner not implemented")
+    
+    # print out all the tokens
     else:
-        print("EOF  null") # Placeholder, remove this line when implementing the scanner
+        source = ""  
+        tokens = scan_tokens(source)
+        for token in tokens:
+            print(token)
 
 
 if __name__ == "__main__":
