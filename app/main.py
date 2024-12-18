@@ -1,19 +1,17 @@
 import sys
 import re
 
-def scan_tokens(source):
-    if not source.strip():
-        return [Token("EOF", "null")]
-
 class Token:
-    def __init__(self, token_type, lexeme, literal=None):
+    def __init__(self, token_type, literal=None):
         self.token_type = token_type
-        self.lexeme = lexeme
         self.literal = literal
 
     def __str__(self):
-        return f"{self.token_type} {self.literal}"
+        return f"{self.token_type}  {self.literal if self.literal is not None else 'null'}"
 
+def scan_tokens(source):
+    if not source.strip():
+        return [Token("EOF")]
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
