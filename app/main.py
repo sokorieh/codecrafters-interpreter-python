@@ -17,10 +17,21 @@ def scan_tokens(source):
             tokens.append(Token("LEFT_PAREN", "(", None))
         elif char == ')':
             tokens.append(Token("RIGHT_PAREN", ")", None))
+
         elif char == '{':
             tokens.append(Token("LEFT_BRACE", "{", None))
         elif char == '}':
             tokens.append(Token("RIGHT_BRACE", "}", None))
+            
+        elif char == '*':
+            tokens.append(Token("STAR", "*", None))
+        elif char == '.':
+            tokens.append(Token("DOT", ".", None))
+        elif char == ',':
+            tokens.append(Token("COMMA", ",", None))
+        elif char == '+':
+            tokens.append(Token("PLUS", "+", None))
+
     
     
     tokens.append(Token("EOF", "", None))  
