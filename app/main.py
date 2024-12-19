@@ -1,22 +1,26 @@
 import sys
-import re
 
 class Token:
-    def __init__(self, token_type, literal=None):
+    def __init__(self, token_type, lexeme, literal=None):
         self.token_type = token_type
+        self.lexeme = lexeme
         self.literal = literal
 
     def __str__(self):
-        return f"{self.token_type}  {self.literal if self.literal is not None else 'null'}"
+        return f"{self.token_type}  {self.lexeme} {self.literal if self.literal is not None else 'null'}"
 
 def scan_tokens(source):
-    if not source.strip():
-        return [Token("EOF")]
+    tokens = []
+    for char in source:
+        if char == '(':
+            tokens.append(Token("LEFT_PAREN", "(", None))
+        elif char == ')':
+            tokens.append(Token("RIGHT_PAREN", ")", None))
+    
+    tokens.append(Token("EOF", "", None))  
+    return tokens
 
 def main():
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    print("Logs from your program will appear here!", file=sys.stderr)
-
     if len(sys.argv) < 3:
         print("Usage: ./your_program.sh tokenize <filename>", file=sys.stderr)
         exit(1)
@@ -28,19 +32,16 @@ def main():
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
 
-    with open(filename) as file:
-        file_contents = file.read()
+    try:
+        with open(filename) as file:
+            file_contents = file.read()
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found", file=sys.stderr)
+        exit(1)
 
-    if file_contents:
-        raise NotImplementedError("Scanner not implemented")
-    
-    # print out all the tokens
-    else:
-        source = ""  
-        tokens = scan_tokens(source)
-        for token in tokens:
-            print(token)
-
+    tokens = scan_tokens(file_contents)
+    for token in tokens:
+        print(token)
 
 if __name__ == "__main__":
     main()
