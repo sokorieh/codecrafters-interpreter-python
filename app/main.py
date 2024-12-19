@@ -22,7 +22,7 @@ def scan_tokens(source):
             tokens.append(Token("LEFT_BRACE", "{", None))
         elif char == '}':
             tokens.append(Token("RIGHT_BRACE", "}", None))
-            
+
         elif char == '*':
             tokens.append(Token("STAR", "*", None))
         elif char == '.':
@@ -31,6 +31,10 @@ def scan_tokens(source):
             tokens.append(Token("COMMA", ",", None))
         elif char == '+':
             tokens.append(Token("PLUS", "+", None))
+        elif char == '-':
+            tokens.append(Token("MINUS", "-", None))
+        elif char == ";":
+            tokens.append(Token("SEMICOLON", ";", None))
 
     
     
