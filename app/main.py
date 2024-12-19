@@ -7,7 +7,8 @@ class Token:
         self.literal = literal
 
     def __str__(self):
-        return f"{self.token_type}  {self.lexeme} {self.literal if self.literal is not None else 'null'}"
+        return f"{self.token_type} {self.lexeme} {self.literal if self.literal is not None else 'null'}"
+
 
 def scan_tokens(source):
     tokens = []
