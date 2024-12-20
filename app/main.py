@@ -1,4 +1,5 @@
 import sys
+error_code = 0
 
 class Token:
     def __init__(self, token_type, lexeme, literal=None):
@@ -11,6 +12,7 @@ class Token:
 
 
 def scan_tokens(source):
+    global error_code
     tokens = []
     for char in source:
         if char == '(':
@@ -35,9 +37,16 @@ def scan_tokens(source):
             tokens.append(Token("MINUS", "-", None))
         elif char == ";":
             tokens.append(Token("SEMICOLON", ";", None))
+        
+        # handle invalid tokens
+        else:
+            error_code = 65
+            line_num = source.count("\n", 0, source.find(char)) + 1
 
-    
-    
+            print(
+                "[line %s] Error: Unexpected character: %s" % (line_num, char),
+                file=sys.stderr
+            )
     tokens.append(Token("EOF", "", None))  
     return tokens
 
@@ -64,5 +73,7 @@ def main():
     for token in tokens:
         print(token)
 
+    exit(error_code)
+    
 if __name__ == "__main__":
     main()
