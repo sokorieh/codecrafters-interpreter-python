@@ -14,7 +14,11 @@ class Token:
 def scan_tokens(source):
     global error_code
     tokens = []
-    for char in source:
+    i = 0
+
+    while i < len(source):
+        char = source[i]
+
         if char == '(':
             tokens.append(Token("LEFT_PAREN", "(", None))
         elif char == ')':
@@ -35,8 +39,19 @@ def scan_tokens(source):
             tokens.append(Token("PLUS", "+", None))
         elif char == '-':
             tokens.append(Token("MINUS", "-", None))
-        elif char == ";":
+        elif char == ';':
             tokens.append(Token("SEMICOLON", ";", None))
+
+        elif char == '=':
+
+            # check if next char is also = 
+            if i + 1 < len(source) and source[i + 1] == '=':
+                tokens.append(Token("EQUAL_EQUAL", "==", None))
+
+                # skip the 2nd =
+                i += 1
+            else:
+                tokens.append(Token("EQUAL", "=", None))
         
         # handle invalid tokens
         else:
@@ -47,6 +62,8 @@ def scan_tokens(source):
                 "[line %s] Error: Unexpected character: %s" % (line_num, char),
                 file=sys.stderr
             )
+        i += 1
+        
     tokens.append(Token("EOF", "", None))  
     return tokens
 
@@ -74,6 +91,6 @@ def main():
         print(token)
 
     exit(error_code)
-    
+
 if __name__ == "__main__":
     main()
