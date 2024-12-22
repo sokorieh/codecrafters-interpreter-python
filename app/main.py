@@ -30,11 +30,15 @@ def scan_tokens(source):
         ';': "SEMICOLON",
         '!': "BANG",
         '=': "EQUAL",
+        '<': "LESS",
+        '>': "GREATER",
     }
 
     multi_char_tokens = {
         "==": "EQUAL_EQUAL",
         "!=": "BANG_EQUAL",
+        "<=": "LESS_EQUAL",
+        ">=": "GREATER_EQUAL",
     }
 
     tokens = []
