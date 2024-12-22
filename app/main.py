@@ -17,7 +17,7 @@ def report_error(line_num, char):
     print(f"[line {line_num}] Error: Unexpected character: {char}", file=sys.stderr)
 
 def scan_tokens(source):
-    single_char_tokens = {
+    token_types = {
         '(': "LEFT_PAREN",
         ')': "RIGHT_PAREN",
         '{': "LEFT_BRACE",
@@ -34,14 +34,12 @@ def scan_tokens(source):
         '>': "GREATER",
         '/': "SLASH",
 
-    }
-
-    multi_char_tokens = {
         "==": "EQUAL_EQUAL",
         "!=": "BANG_EQUAL",
         "<=": "LESS_EQUAL",
         ">=": "GREATER_EQUAL",
         "//": "COMMENT",
+
     }
 
     tokens = []
@@ -57,21 +55,21 @@ def scan_tokens(source):
         # check for multi char tokens
         elif i + 1 < len(source):
             two_char_sequence = char + source[i + 1]
-            if two_char_sequence in multi_char_tokens:
-                if multi_char_tokens[two_char_sequence] == "COMMENT":
+            if two_char_sequence in token_types:
+                if token_types[two_char_sequence] == "COMMENT":
                     # skip the rest of the comment
                     while i < len(source) and source[i] != "\n":
                         i += 1
                     continue
                 else:
-                    tokens.append(Token(multi_char_tokens[two_char_sequence], two_char_sequence, None))
+                    tokens.append(Token(token_types[two_char_sequence], two_char_sequence, None))
                 i += 1
             else:
                 pass
 
         # check for single char tokens
-        if char in single_char_tokens:
-            tokens.append(Token(single_char_tokens[char], char, None))
+        if char in token_types:
+            tokens.append(Token(token_types[char], char, None))
         elif char.isspace():
             pass  
         else:
