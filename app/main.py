@@ -1,4 +1,5 @@
 import sys
+
 error_code = 0
 
 class Token:
@@ -10,72 +11,61 @@ class Token:
     def __str__(self):
         return f"{self.token_type} {self.lexeme} {self.literal if self.literal is not None else 'null'}"
 
+def report_error(line_num, char):
+    global error_code
+    error_code = 65
+    print(f"[line {line_num}] Error: Unexpected character: {char}", file=sys.stderr)
 
 def scan_tokens(source):
-    global error_code
+    single_char_tokens = {
+        '(': "LEFT_PAREN",
+        ')': "RIGHT_PAREN",
+        '{': "LEFT_BRACE",
+        '}': "RIGHT_BRACE",
+        '*': "STAR",
+        '.': "DOT",
+        ',': "COMMA",
+        '+': "PLUS",
+        '-': "MINUS",
+        ';': "SEMICOLON",
+        '!': "BANG",
+        '=': "EQUAL",
+    }
+
+    multi_char_tokens = {
+        "==": "EQUAL_EQUAL",
+        "!=": "BANG_EQUAL",
+    }
+
     tokens = []
     i = 0
 
     while i < len(source):
         char = source[i]
 
-        if char == '(':
-            tokens.append(Token("LEFT_PAREN", "(", None))
-        elif char == ')':
-            tokens.append(Token("RIGHT_PAREN", ")", None))
+        # check for multi char tokens
+        if i + 1 < len(source):
+            two_char_sequence = char + source[i + 1]
+            if two_char_sequence in multi_char_tokens:
+                tokens.append(Token(multi_char_tokens[two_char_sequence], two_char_sequence, None))
+                i += 2  
+                continue
 
-        elif char == '{':
-            tokens.append(Token("LEFT_BRACE", "{", None))
-        elif char == '}':
-            tokens.append(Token("RIGHT_BRACE", "}", None))
-
-        elif char == '*':
-            tokens.append(Token("STAR", "*", None))
-        elif char == '.':
-            tokens.append(Token("DOT", ".", None))
-        elif char == ',':
-            tokens.append(Token("COMMA", ",", None))
-        elif char == '+':
-            tokens.append(Token("PLUS", "+", None))
-        elif char == '-':
-            tokens.append(Token("MINUS", "-", None))
-        elif char == ';':
-            tokens.append(Token("SEMICOLON", ";", None))
-
-        elif char == '!':
-            # check if next char is = for !=
-            if i + 1 < len(source) and source[i + 1] == '=':
-                tokens.append(Token("BANG_EQUAL", "!=", None))
-
-                # skip the =
-                i += 1
-            else:
-                tokens.append(Token("BANG", "!", None))
-
-        elif char == '=':
-
-            # check if next char is also = 
-            if i + 1 < len(source) and source[i + 1] == '=':
-                tokens.append(Token("EQUAL_EQUAL", "==", None))
-
-                # skip the 2nd =
-                i += 1
-            else:
-                tokens.append(Token("EQUAL", "=", None))
-        
-        # handle invalid tokens
+        # check for single char tokens
+        if char in single_char_tokens:
+            tokens.append(Token(single_char_tokens[char], char, None))
+        elif char.isspace():
+            pass  
         else:
-            error_code = 65
-            line_num = source.count("\n", 0, source.find(char)) + 1
+            # report invalid token
+            line_num = source.count("\n", 0, i) + 1
+            report_error(line_num, char)
 
-            print(
-                "[line %s] Error: Unexpected character: %s" % (line_num, char),
-                file=sys.stderr
-            )
         i += 1
-        
-    tokens.append(Token("EOF", "", None))  
+
+    tokens.append(Token("EOF", "", None))
     return tokens
+
 
 def main():
     if len(sys.argv) < 3:
