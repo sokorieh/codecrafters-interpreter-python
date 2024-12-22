@@ -32,6 +32,8 @@ def scan_tokens(source):
         '=': "EQUAL",
         '<': "LESS",
         '>': "GREATER",
+        '/': "SLASH",
+
     }
 
     multi_char_tokens = {
@@ -39,6 +41,7 @@ def scan_tokens(source):
         "!=": "BANG_EQUAL",
         "<=": "LESS_EQUAL",
         ">=": "GREATER_EQUAL",
+        "//": "COMMENT",
     }
 
     tokens = []
@@ -51,7 +54,12 @@ def scan_tokens(source):
         if i + 1 < len(source):
             two_char_sequence = char + source[i + 1]
             if two_char_sequence in multi_char_tokens:
-                tokens.append(Token(multi_char_tokens[two_char_sequence], two_char_sequence, None))
+                if multi_char_tokens[two_char_sequence] == "COMMENT":
+                    # skip the rest of the comment
+                    while i < len(source) and source[i] != "\n":
+                        i += 1
+                else:
+                    tokens.append(Token(multi_char_tokens[two_char_sequence], two_char_sequence, None))
                 i += 2  
                 continue
 
