@@ -42,6 +42,16 @@ def scan_tokens(source):
         elif char == ';':
             tokens.append(Token("SEMICOLON", ";", None))
 
+        elif char == '!':
+            # check if next char is = for !=
+            if i + 1 < len(source) and source[i + 1] == '=':
+                tokens.append(Token("BANG_EQUAL", "!=", None))
+
+                # skip the =
+                i += 1
+            else:
+                tokens.append(Token("BANG", "!", None))
+
         elif char == '=':
 
             # check if next char is also = 
