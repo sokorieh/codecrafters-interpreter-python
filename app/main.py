@@ -42,6 +42,7 @@ def scan_tokens(source):
 
     }
 
+
     tokens = []
     i = 0
     line = 1
@@ -63,7 +64,10 @@ def scan_tokens(source):
                     continue
                 else:
                     tokens.append(Token(token_types[two_char_sequence], two_char_sequence, None))
-                i += 1
+
+                # skip the second idx for multi char token
+                i += 2
+                continue
             else:
                 pass
 
