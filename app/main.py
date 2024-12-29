@@ -11,10 +11,14 @@ class Token:
     def __str__(self):
         return f"{self.token_type} {self.lexeme} {self.literal if self.literal is not None else 'null'}"
 
-def report_error(line_num, char):
+def report_error(line_num, char=None, message=None):
     global error_code
     error_code = 65
-    print(f"[line {line_num}] Error: Unexpected character: {char}", file=sys.stderr)
+
+    if message:
+        print(f"[line {line_num}] Error: {message}", file=sys.stderr)
+    elif char:
+        print(f"[line {line_num}] Error: Unexpected character: {char}", file=sys.stderr)
 
 def scan_tokens(source):
     token_types = {
@@ -80,7 +84,7 @@ def scan_tokens(source):
                 i += 1
 
             if i + 1 >= len(source):  
-                report_error(line, char)
+                report_error(line, message="Unterminated string.")
                 break
 
             # get string contents
