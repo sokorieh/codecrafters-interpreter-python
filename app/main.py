@@ -58,7 +58,7 @@ def scan_tokens(source):
             line += 1
 
         # check for multi char tokens
-        if i + 1 < len(source):
+        elif i + 1 < len(source):
             two_char_sequence = char + source[i + 1]
             if two_char_sequence in token_types:
                 if token_types[two_char_sequence] == "COMMENT":
@@ -92,9 +92,25 @@ def scan_tokens(source):
             tokens.append(Token("STRING", '"' + string_value + '"', string_value))
             i += 2  
             continue
+        
+        # number literals
+        elif char.isdigit():
+            start = i
+            while i + 1 < len(source) and source[i + 1].isdigit():
+                i += 1
+
+            # fraction 
+            if i + 1 < len(source) and source[i + 1] == '.' and i + 2 < len(source) and source[i + 2].isdigit():
+                i += 1  # skip .
+                while i + 1 < len(source) and source[i + 1].isdigit():
+                    i += 1
+
+            number = source[start:i + 1]
+            tokens.append(Token("NUMBER", number, float(number)))
+        
 
         # check for single char tokens
-        if char in token_types:
+        elif char in token_types:
             tokens.append(Token(token_types[char], char, None))
         elif char.isspace():
             pass  
