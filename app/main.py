@@ -54,7 +54,7 @@ def scan_tokens(source):
             line += 1
 
         # check for multi char tokens
-        elif i + 1 < len(source):
+        if i + 1 < len(source):
             two_char_sequence = char + source[i + 1]
             if two_char_sequence in token_types:
                 if token_types[two_char_sequence] == "COMMENT":
@@ -70,6 +70,24 @@ def scan_tokens(source):
                 continue
             else:
                 pass
+
+        # string literals
+        if char == '"':
+            start = i + 1
+            while i + 1 < len(source) and source[i + 1] != '"':
+                if source[i + 1] == '\n':
+                    line += 1
+                i += 1
+
+            if i + 1 >= len(source):  
+                report_error(line, char)
+                break
+
+            # get string contents
+            string_value = source[start:i + 1]
+            tokens.append(Token("STRING", '"' + string_value + '"', string_value))
+            i += 2  
+            continue
 
         # check for single char tokens
         if char in token_types:
