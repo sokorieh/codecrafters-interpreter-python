@@ -107,7 +107,14 @@ def scan_tokens(source):
 
             number = source[start:i + 1]
             tokens.append(Token("NUMBER", number, float(number)))
-        
+
+        # identifiers
+        elif char.isalpha() or char == '_':
+            start = i
+            while i + 1 < len(source) and (source[i + 1].isalnum() or source[i + 1] == '_'):
+                i += 1
+            identifier = source[start:i + 1]
+            tokens.append(Token("IDENTIFIER", identifier, None))
 
         # check for single char tokens
         elif char in token_types:
