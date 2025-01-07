@@ -43,8 +43,27 @@ def scan_tokens(source):
         "<=": "LESS_EQUAL",
         ">=": "GREATER_EQUAL",
         "//": "COMMENT",
-
     }
+    
+    reserved_words = {
+        "and": "AND",
+        "class": "CLASS",
+        "else": "ELSE",
+        "false": "FALSE",
+        "for": "FOR",
+        "fun": "FUN",
+        "if": "IF",
+        "nil": "NIL",
+        "or": "OR",
+        "print": "PRINT",
+        "return": "RETURN",
+        "super": "SUPER",
+        "this": "THIS",
+        "true": "TRUE",
+        "var": "VAR",
+        "while": "WHILE",
+    }
+
 
 
     tokens = []
@@ -114,7 +133,10 @@ def scan_tokens(source):
             while i + 1 < len(source) and (source[i + 1].isalnum() or source[i + 1] == '_'):
                 i += 1
             identifier = source[start:i + 1]
-            tokens.append(Token("IDENTIFIER", identifier, None))
+
+            # check if its reserved
+            token_type = reserved_words.get(identifier, "IDENTIFIER")
+            tokens.append(Token(token_type, identifier, None))
 
         # check for single char tokens
         elif char in token_types:
